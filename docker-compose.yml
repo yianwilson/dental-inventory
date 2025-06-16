@@ -1,0 +1,27 @@
+version: '3'
+services:
+  mongo:
+    image: mongo:6
+    volumes:
+      - mongo_data:/data/db
+  backend:
+    build: ./backend
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/propertyapp
+      - JWT_SECRET=devsecret
+      - SMTP_USER=
+      - SMTP_PASS=
+    volumes:
+      - ./backend/uploads:/app/uploads
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+volumes:
+  mongo_data:
